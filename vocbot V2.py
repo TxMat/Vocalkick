@@ -1,9 +1,14 @@
 import discord
 import asyncio
 from time import sleep, time
+from json import load as json_load
 
 print(discord.__version__)
-TOKEN = "Njk3MzQzMTIwNDMzNzQxOTQ3.Xo2YMw.5PGHVvsDXlaz6iXwKAsE6gHWmCQ"
+
+# dans config.json: {"token": "Njk3MzQzMTIwNDMzNzQxOTQ3.Xo2YMw.5PGHVvsDXlaz6iXwKAsE6gHWmCQ", "admins": [259676097652719616, 328521363180748801], "default": {"alone_time": 300, "reason": "as-tu oublié de te déconnecter du vocal? ne t'inquiete pas je l'ai fait pour toi :)", "prefix"]: "§", "running": true}}
+
+with open("config.json") as f:
+    CONFIG = json_load(f)
 
 
 OPTIONS = {}
@@ -38,7 +43,7 @@ async def helpp(message, *args):
     await message.channel.send(content="faites §h dm pour avoir de de l'aide en dm ou §h ch pour que j'envoie l'aide ici.")
 
 actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help": helpp}
-
+admin_actions = ["desc"]
 
 @client.event
 async def on_message(message):
@@ -49,27 +54,23 @@ async def on_message(message):
         if a[0] not in actions:
             print("wrong command:", message.content, "by :", message.author)
             return
+        if a[0] in admin_actions and message.author.id not in CONFIG["admins"]:
+            print("wrong permission to use command:", message.content, "by :", message.author)
+            return
         print("executing command:", message.content, "by :", message.author)
         await actions[a[0]](message, *a[1:])
+
 
 @client.event
 async def on_ready():
     print('{} is online'.format(client.user))
     await change_presence(None, 'online and ready') 
     for server in client.guilds:
-        OPTIONS[server.id] = {}
-        OPTIONS[server.id]["alone_time"] = 300
-        OPTIONS[server.id]["reason"] = "as-tu oublié de te déconnecter du vocal? ne t'inquiete pas je l'ai fait pour toi :)"
-        OPTIONS[server.id]["prefix"] = "§"
-        OPTIONS[server.id]["running"] = True
+        OPTIONS[server.id] = dict(CONFIG["default"])
         
 @client.event
 async def on_guild_join(guild):
-    OPTIONS[guild.id] = {}
-    OPTIONS[guild.id]["alone_time"] = 300
-    OPTIONS[guild.id]["reason"] = "as-tu oublié de te déconnecter du vocal? ne t'inquiete pas je l'ai fait pour toi :)"
-    OPTIONS[guild.id]["prefix"] = "§"
-    OPTIONS[guild.id]["running"] = True
+    OPTIONS[guild.id] = dict(CONFIG["default"])
 
 async def on_delay(channel):
     if not OPTIONS[channel.guild.id]["running"]:
@@ -90,7 +91,6 @@ async def on_delay(channel):
         await members[0].dm_channel.send(OPTIONS[channel.guild.id]["reason"], delete_after = 86400)
         
     
-
 @client.event
 async def on_voice_state_update(member, before, after):
     if after.channel and before.channel != after.channel:
@@ -105,5 +105,5 @@ async def on_voice_state_update(member, before, after):
             if before.channel in CHANNELS:
                 del CHANNELS[before.channel]
         
-client.run(TOKEN)
+client.run(CONFIG["token"])
 
