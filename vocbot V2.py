@@ -30,7 +30,18 @@ async def toogle_stop(message, *args):
         print("stopped")
         await change_presence(message, 'paused by :', str(message.author))
 
-actions = {"option": option, "desc": change_presence, "stop": toogle_stop}
+    
+async def helpa(message, ty):
+    mem = message.author
+    if ty == "dm":
+        await mem.create_dm()
+        await mem.dm_channel.send("**command list:** \n__option alone_time :__ temps ")
+
+
+async def helpp(message, *args):
+    await message.channel.send(content="faites §h dm pour avoir de de l'aide en dm ou §h ch pour que j'envoie l'aide ici.")
+
+actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help": helpp, "h": helpa}
 
 
 @client.event
