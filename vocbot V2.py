@@ -39,6 +39,7 @@ async def helpa(message, ty):
 
 
 async def helpp(message, *args):
+    mem = message.author
     #await message.channel.send(content="faites §h dm pour avoir de de l'aide en dm ou §h ch pour que j'envoie l'aide ici.")
     await mem.create_dm()
     await mem.dm_channel.send("**command list:** \n__option alone_time :__ temps (en sec) qu'un utilisateur peut rester seul dans un vocal\n__option_raison :__ le message qui sera envoyé aux utilisateur kickés (le message se supprime au bout de 24 h)\n__stop :__ permet d'arreter le bot temporairement en cas de problèmes (pour relancer le bot il suffit de refaire la commande)\n__option_prefix :__ permet de changer le prefix du bot (§ par defaut)\n__help :__ envoie ce message à l'utilisateur qui effectue la commande")
@@ -48,7 +49,6 @@ admin_actions = ["desc"]
 
 @client.event
 async def on_message(message):
-    print(OPTIONS[message.guild.id]["prefix"])
     if type(message.channel) != discord.TextChannel:
         return
     if len(message.content) and message.content[0] == OPTIONS[message.guild.id]["prefix"]:
