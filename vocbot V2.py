@@ -5,25 +5,21 @@ from time import sleep, time
 print(discord.__version__)
 TOKEN = "Njk3MzQzMTIwNDMzNzQxOTQ3.Xo2YMw.5PGHVvsDXlaz6iXwKAsE6gHWmCQ"
 
-OPTIONS = {}
-OPTIONS["alone_time"] = 300
-OPTIONS["reason"] = "as-tu oublié de te déconnecter du vocal? ne t'inquiete pas je l'ai fait pour toi :)"
-OPTIONS["prefix"] = "§"
-OPTIONS["running"] = True
 
+OPTIONS = {}
 
 client = discord.Client()
 CHANNELS = {}
 
 async def option(message, var, value, *args):
-    OPTIONS[var] = type(OPTIONS[var])(value)
+    OPTIONS[message.guild.id][var] = type(OPTIONS[message.guild.id][var])(value)
 
 async def change_presence(message, *args):
     await client.change_presence(activity=discord.Activity(name=" ".join(args), type=discord.ActivityType.playing))
 
 async def toogle_stop(message, *args):
-    OPTIONS["running"] = not OPTIONS["running"]
-    if OPTIONS["running"] == True:
+    OPTIONS[message.guild.id]["running"] = not OPTIONS[message.guild.id]["running"]
+    if OPTIONS[message.guild.id]["running"] == True:
         await change_presence(message, 'online and ready')
         print("resuming")
     else:
@@ -41,12 +37,12 @@ async def helpa(message, ty):
 async def helpp(message, *args):
     await message.channel.send(content="faites §h dm pour avoir de de l'aide en dm ou §h ch pour que j'envoie l'aide ici.")
 
-actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help": helpp, "h": helpa}
+actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help": helpp}
 
 
 @client.event
 async def on_message(message):
-    if len(message.content) and message.content[0] == OPTIONS["prefix"]:
+    if len(message.content) and message.content[0] == OPTIONS[message.guild.id]["prefix"]:
         a = message.content[1:].split(" ")
         if a[0] not in actions:
             print("wrong command:", message.content, "by :", message.author)
@@ -59,25 +55,38 @@ async def on_message(message):
 async def on_ready():
     print('{} is online'.format(client.user))
     await change_presence(None, 'online and ready') 
-    
+    for server in client.guilds:
+        OPTIONS[server.id] = {}
+        OPTIONS[server.id]["alone_time"] = 300
+        OPTIONS[server.id]["reason"] = "as-tu oublié de te déconnecter du vocal? ne t'inquiete pas je l'ai fait pour toi :)"
+        OPTIONS[server.id]["prefix"] = "§"
+        OPTIONS[server.id]["running"] = True
+        
+@client.event
+async def on_guild_join(guild):
+    OPTIONS[guild.id] = {}
+    OPTIONS[guild.id]["alone_time"] = 300
+    OPTIONS[guild.id]["reason"] = "as-tu oublié de te déconnecter du vocal? ne t'inquiete pas je l'ai fait pour toi :)"
+    OPTIONS[guild.id]["prefix"] = "§"
+    OPTIONS[guild.id]["running"] = True
 
 async def on_delay(channel):
-    if not OPTIONS["running"]:
+    if not OPTIONS[channel.guild.id]["running"]:
         if channel in CHANNELS:
             del CHANNELS[channel]
         return
-    await asyncio.sleep(OPTIONS["alone_time"])
-    while not OPTIONS["running"]:
-        await asyncio.sleep(OPTIONS["alone_time"])
+    await asyncio.sleep(OPTIONS[channel.guild.id]["alone_time"])
+    while not OPTIONS[channel.guild.id]["running"]:
+        await asyncio.sleep(OPTIONS[channel.guild.id]["alone_time"])
     if channel in CHANNELS:
         del CHANNELS[channel]
         members = channel.members
         if len(members) != 1:
             return
         print(members[0], "kicked!")
-        await members[0].edit(voice_channel=None, reason=OPTIONS["reason"])
+        await members[0].edit(voice_channel=None, reason=OPTIONS[channel.guild.id]["reason"])
         await members[0].create_dm()
-        await members[0].dm_channel.send(OPTIONS["reason"], delete_after = 86400)
+        await members[0].dm_channel.send(OPTIONS[channel.guild.id]["reason"], delete_after = 86400)
         
     
 
