@@ -24,7 +24,7 @@ async def change_presence(message, *args):
 async def toogle_stop(message, *args):
     OPTIONS[message.guild.id]["running"] = not OPTIONS[message.guild.id]["running"]
     if OPTIONS[message.guild.id]["running"] == True:
-        await change_presence(message, 'online and ready')
+        await change_presence(message, 'online and ready §help')
         print("resuming")
     else:
         print("stopped")
@@ -67,7 +67,7 @@ async def on_message(message):
 @client.event
 async def on_ready():
     print('{} is online'.format(client.user))
-    await change_presence(None, 'online and ready') 
+    await change_presence(None, 'online and ready §help') 
     for server in client.guilds:
         OPTIONS[server.id] = {}
         OPTIONS[server.id]["alone_time"] = 300
