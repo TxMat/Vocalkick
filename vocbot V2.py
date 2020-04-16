@@ -39,8 +39,10 @@ async def helpa(message, ty):
 
 
 async def helpp(message, *args):
+    emoji = "👌"
     mem = message.author
-    #await message.channel.send(content="faites §h dm pour avoir de de l'aide en dm ou §h ch pour que j'envoie l'aide ici.")
+    await message.channel.send(content="send ;)")
+    await message.add_reaction(emoji)
     await mem.create_dm()
     await mem.dm_channel.send("__**command list:**__ \n\n**option alone_time :** temps (en sec) qu'un utilisateur peut rester seul dans un vocal\n\n**option_raison :** le message qui sera envoyé aux utilisateur kickés (le message se supprime au bout de 24 h)\n\n**stop :** permet d'arreter le bot temporairement en cas de problèmes (pour relancer le bot il suffit de refaire la commande)\n\n**option_prefix :** permet de changer le prefix du bot (§ par defaut)\n\n**help :** envoie ce message à l'utilisateur qui effectue la commande")
 
