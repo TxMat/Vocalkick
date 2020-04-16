@@ -42,6 +42,8 @@ actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help
 
 @client.event
 async def on_message(message):
+    if type(message.channel) != discord.TextChannel:
+        return
     if len(message.content) and message.content[0] == OPTIONS[message.guild.id]["prefix"]:
         a = message.content[1:].split(" ")
         if a[0] not in actions:
@@ -49,7 +51,6 @@ async def on_message(message):
             return
         print("executing command:", message.content, "by :", message.author)
         await actions[a[0]](message, *a[1:])
-
 
 @client.event
 async def on_ready():
