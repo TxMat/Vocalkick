@@ -83,6 +83,8 @@ async def on_voice_state_update(member, before, after):
         else:
             if before.channel in CHANNELS:
                 del CHANNELS[before.channel]
+				
+#test
         
 client.run(TOKEN)
 
