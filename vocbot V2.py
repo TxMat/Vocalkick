@@ -39,10 +39,10 @@ async def helpa(message, ty):
 
 
 async def helpp(message, *args):
-    emoji = "👌"
+    #emoji = "👌"
     mem = message.author
-    await message.channel.send(content="send ;)")
-    await message.add_reaction(emoji)
+    #await message.channel.send(content="send ;)")
+    await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
     await mem.create_dm()
     await mem.dm_channel.send("__**command list:**__ \n\n**option alone_time :** temps (en sec) qu'un utilisateur peut rester seul dans un vocal\n\n**option_raison :** le message qui sera envoyé aux utilisateur kickés (le message se supprime au bout de 24 h)\n\n**stop :** permet d'arreter le bot temporairement en cas de problèmes (pour relancer le bot il suffit de refaire la commande)\n\n**option_prefix :** permet de changer le prefix du bot (§ par defaut)\n\n**help :** envoie ce message à l'utilisateur qui effectue la commande")
 
@@ -76,6 +76,7 @@ async def on_ready():
         OPTIONS[server.id]["reason"] = "as-tu oublié de te déconnecter du vocal? ne t'inquiete pas je l'ai fait pour toi :)"	
         OPTIONS[server.id]["prefix"] = "§"	
         OPTIONS[server.id]["running"] = True
+        OPTIONS[server.id]["emoji"] = "👌"
         
 @client.event
 async def on_guild_join(guild):
@@ -84,6 +85,7 @@ async def on_guild_join(guild):
     OPTIONS[server.id]["reason"] = "as-tu oublié de te déconnecter du vocal? ne t'inquiete pas je l'ai fait pour toi :)"	
     OPTIONS[server.id]["prefix"] = "§"	
     OPTIONS[server.id]["running"] = True
+    OPTIONS[server.id]["emoji"] = "👌"
 
 async def on_delay(channel):
     if not OPTIONS[channel.guild.id]["running"]:
