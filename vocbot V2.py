@@ -53,9 +53,22 @@ actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help
 perm_actions = ["option", "stop"]
 admin_actions = ["desc"]
 
+badwords = ["tg","TG","Tg","NTM","ntm","PD","pd","fdp","FDP","suce","Suce","SUCE","ftg","FTG"]
+
 @client.event
 async def on_message(message):
     if type(message.channel) != discord.TextChannel:
+        if message.content in badwords:
+            if message.author.id == 328521363180748801:
+                print("insult in dm :", message.content)
+                print("by :", message.author)
+                return
+            await message.author.dm_channel.send(">:(")
+            print("insult in dm :", message.content)
+            print("get trolled :", message.author)
+            return
+        print("dm ressage recived :", message.content)
+        print("by :", message.author)
         return
     if len(message.content) and message.content[0] == OPTIONS[message.guild.id]["prefix"]:
         
@@ -67,7 +80,7 @@ async def on_message(message):
             print("wrong permission to use command:", message.content, "by :", message.author)
             return
         if a[0] in perm_actions and (message.author.guild_permissions.move_members == False and OPTIONS[message.channel.guild.id]["role"] not in list(map(lambda x: x.name, message.author.roles))):
-            print("tg")
+            print("no perms nice try :", message.author)
             print(message.author.roles)
             return
         print("executing command:", message.content, "by :", message.author)
