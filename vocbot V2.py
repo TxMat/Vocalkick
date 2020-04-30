@@ -29,26 +29,25 @@ async def option(message, var, value, *args):
 
 async def change_presence(message, *args):
     await client.change_presence(activity=discord.Activity(name=" ".join(args), type=discord.ActivityType.playing))
+    print("desc change to :", " ".join(args)) 
 
 async def toogle_stop(message, *args):
     OPTIONS[message.guild.id]["running"] = not OPTIONS[message.guild.id]["running"]
     if OPTIONS[message.guild.id]["running"] == True:
         await change_presence(message, 'online and ready &help')
-        print("resuming")
+        print("resuming by :", message.author)
     else:
-        print("stopped")
+        print("stopped by :", message.author)
         await change_presence(message, 'paused by :', str(message.author))
 
     
 
 async def helpp(message, *args):
-    #emoji = "👌"
     mem = message.author
-    #await message.channel.send(content="send ;)")
     await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
     await mem.create_dm()
     await mem.dm_channel.send("__**command list:**__ \n\n**option alone_time :** temps (en sec) qu'un utilisateur peut rester seul dans un vocal (par défaut 5min)\n\n**option raison :** le message qui sera envoyé aux utilisateur kickés (le message se supprime au bout de <deltime>)\n\n**stop :** permet d'arrêter le bot temporairement en cas de problèmes (pour relancer le bot il suffit de refaire la commande)\n\n**option prefix :** permet de changer le préfix du bot (& par défaut)\n\n**help :** envoie ce message à l'utilisateur qui effectue la commande\n\n**option emoji :** l'emoji avec le quel le bot réagit quand une personne fait <préfix>help (par défaut : :ok_hand:)\n\n**option frst_time :** temps (en sec) avant que le bot ne kick une personne qui est seul dans un vocal et qui n'a jamais été en conversation avec un autre utilisateur (30min par défaut )\n\n**option deltime :** temps (en sec) avant que le bot supprime le message d'avertissement envoyé en dm (par défaut : 24h)\n\n**option role :** nom du role qu'un membre doit posséder pour modifier les differents parametres (`modifier` par défaut)\n\n*note : il vous faut la permission `déplacer les membres` ou le role defini par <role> pour parametrer le bot*\n\n`Une question/sugestion? contactez mon devloppeur : `<@259676097652719616>` :)`")
-
+    print("help succsesfully send")
 actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help": helpp}
 perm_actions = ["option", "stop"]
 admin_actions = ["desc"]
@@ -58,6 +57,8 @@ badwords = ["tg","TG","Tg","NTM","ntm","PD","pd","fdp","FDP","suce","Suce","SUCE
 @client.event
 async def on_message(message):
     if type(message.channel) != discord.TextChannel:
+        if message.author.id == 697343120433741947:
+            return
         if message.content in badwords:
             if message.author.id == 328521363180748801:
                 print("insult in dm :", message.content)
@@ -80,7 +81,7 @@ async def on_message(message):
             print("wrong permission to use command:", message.content, "by :", message.author)
             return
         if a[0] in perm_actions and (message.author.guild_permissions.move_members == False and OPTIONS[message.channel.guild.id]["role"] not in list(map(lambda x: x.name, message.author.roles))):
-            print("no perms nice try :", message.author)
+            print("no perms nice try ", message.author)
             print(message.author.roles)
             return
         print("executing command:", message.content, "by :", message.author)
@@ -89,7 +90,7 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    print('{} is online'.format(client.user))
+    print('{} is online and ready to kick'.format(client.user))
     await change_presence(None, 'online and ready &help') 
     for server in client.guilds:
         OPTIONS[server.id] = dict(DEFAULT)
@@ -104,9 +105,21 @@ async def on_delay(channel, first=False):
             del CHANNELS[channel]
         return
     if first:
+        print(channel.members[0].name, "is alone in", channel.name, "waiting for someone in the server :", channel.name,)
+        print("starting the alone time countdown before kicking(", OPTIONS[channel.guild.id]["frst_time"], "sec )")
         await asyncio.sleep(OPTIONS[channel.guild.id]["frst_time"])
+        try:
+            print("Countdown ended for", channel.members[0].name, "in", channel.name, "(", channel.name, ")")
+        except:
+            print("Countdown ended but the member has left the channel before")
     else:
+        print(channel.members[0].name, "is now alone in the channel", channel.name, "in the server :", channel.guild.name)
+        print("starting the alone time countdown before kicking(", OPTIONS[channel.guild.id]["alone_time"], "sec )")
         await asyncio.sleep(OPTIONS[channel.guild.id]["alone_time"])
+        try:
+            print("Countdown ended for", channel.members[0].name, "in", channel.name, "(", channel.name, ")")
+        except:
+            print("Countdown ended but the member has left the channel before")
         
     while not OPTIONS[channel.guild.id]["running"]:
         if first:
@@ -116,12 +129,23 @@ async def on_delay(channel, first=False):
     if channel in CHANNELS:
         del CHANNELS[channel]
         members = channel.members
-        if len(members) != 1:
-            return
-        print(members[0], "kicked!")
+        nb = len(members)
+        if nb != 1:
+            if nb > 1:
+                print("there is now", nb, "person connected in", channel.name, "(", channel.guild, ") with", members[0], "aborting kicking procedure...")
+                return
+            if nb == 0:
+                print("there is no one in the channel", channel.name, "can't process to kick...")
+                return
+        print(members[0], "is still alone in", channel.name, "on", channel.guild, "starting kicking procedure...")
         await members[0].edit(voice_channel=None, reason=OPTIONS[channel.guild.id]["reason"])
+        print(members[0], "kicked!")
         await members[0].create_dm()
-        await members[0].dm_channel.send(OPTIONS[channel.guild.id]["reason"], delete_after = OPTIONS[channel.guild.id]["deltime"])
+        try:
+            await members[0].dm_channel.send(OPTIONS[channel.guild.id]["reason"], delete_after = OPTIONS[channel.guild.id]["deltime"])
+        except Exception as e:
+            if e.code == 50007:
+                print("can't send dm to", members[0], "the user must have bocked me")
         
     
 @client.event
@@ -131,11 +155,13 @@ async def on_voice_state_update(member, before, after):
             del CHANNELS[after.channel]
         if len(after.channel.members) == 1:
             CHANNELS[after.channel] = True
+            print("channel changed for", member.name, "(", before.channel, "->", after.channel, ")")
             await on_delay(after.channel, first=True)
     
     if before.channel and  before.channel != after.channel:
         if len(before.channel.members) == 1:
             CHANNELS[before.channel] = True
+            print(member.name, "leave")
             await on_delay(before.channel)
         else:
             if before.channel in CHANNELS:
