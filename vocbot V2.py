@@ -105,11 +105,11 @@ async def on_delay(channel, first=False):
             del CHANNELS[channel]
         return
     if first:
-        print(channel.members[0].name, "is alone in", channel.name, "waiting for someone in the server :", channel.name,)
+        print(channel.members[0].name, "is alone in", channel.name, "waiting for someone in the server :", channel.guild.name,)
         print("starting the alone time countdown before kicking(", OPTIONS[channel.guild.id]["frst_time"], "sec )")
         await asyncio.sleep(OPTIONS[channel.guild.id]["frst_time"])
         try:
-            print("Countdown ended for", channel.members[0].name, "in", channel.name, "(", channel.name, ")")
+            print("Countdown ended for", channel.members[0].name, "in", channel.name, "(", channel.guild.name, ")")
         except:
             print("Countdown ended but the member has left the channel before")
     else:
@@ -117,7 +117,7 @@ async def on_delay(channel, first=False):
         print("starting the alone time countdown before kicking(", OPTIONS[channel.guild.id]["alone_time"], "sec )")
         await asyncio.sleep(OPTIONS[channel.guild.id]["alone_time"])
         try:
-            print("Countdown ended for", channel.members[0].name, "in", channel.name, "(", channel.name, ")")
+            print("Countdown ended for", channel.members[0].name, "in", channel.name, "(", channel.guild.name, ")")
         except:
             print("Countdown ended but the member has left the channel before")
         
@@ -132,7 +132,7 @@ async def on_delay(channel, first=False):
         nb = len(members)
         if nb != 1:
             if nb > 1:
-                print("there is now", nb, "person connected in", channel.name, "(", channel.guild, ") with", members[0], "aborting kicking procedure...")
+                print("there is now", nb, "person connected in", channel.name, "(", channel.guild.name, ") with", members[0], "aborting kicking procedure...")
                 return
             if nb == 0:
                 print("there is no one in the channel", channel.name, "can't process to kick...")
