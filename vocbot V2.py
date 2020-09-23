@@ -31,12 +31,15 @@ idmute = 0
 chat = False
 mute = False
 idbck = 0
+meid = 0
+memid = 0
 
 client = discord.Client()
 CHANNELS = {}
 
 async def option(message, var, value, *args):
     OPTIONS[message.guild.id][var] = type(OPTIONS[message.guild.id][var])(value)
+    await message.add_reaction("👌")
 
 async def change_presence(message, *args):
     await client.change_presence(activity=discord.Activity(name=" ".join(args), type=discord.ActivityType.playing))
@@ -46,16 +49,21 @@ async def toogle_stop(message, *args):
     OPTIONS[message.guild.id]["running"] = not OPTIONS[message.guild.id]["running"]
     if OPTIONS[message.guild.id]["running"] == True:
         await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
-        await change_presence(message, 'online and ready &help')
+        await change_presence(message, '&help | online and ready')
         print("resuming by :", message.author)
     else:
         print("stopped by :", message.author)
-        await change_presence(message, 'paused by :', str(message.author))
+        await change_presence(message, '&help | paused by :', str(message.author))
         await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
 
 async def mutee(message, *args):
     global idmute
     idmute = int(args[0])
+    if idmute == 259676097652719616:
+        await message.add_reaction("🤫")
+        await message.author.create_dm()
+        await message.author.dm_channel.send(message.content + "\n\n mdr non")
+        return
     if idmute in muted:
         await message.add_reaction("❔")
         await message.author.create_dm()
@@ -77,7 +85,7 @@ async def unmutee(message, *args):
         if idmute == 'all':
             muted = []
             return
-        await message.add_reaction("❔")
+        await message.add_reaction("👌")
     finally:
         if idmute not in muted:
             await message.add_reaction("❔")
@@ -92,13 +100,17 @@ async def chatt(message, *args):
     global ids
     global me
     global idbck
+    global meid
+    global memid
     try:
         ids = int(args[0])
         if ids != idbck:
-            await meid.create_dm()
-            await meid.dm_channel.send("Chat closed with " + str(memid))
-            await memid.create_dm()
-            await memid.dm_channel.send("Chat closed with " + str(meid))          
+            if meid or memid != 0:
+                if meid or memid != none:
+                    await meid.create_dm()
+                    await meid.dm_channel.send("Chat closed with " + str(memid))
+                    await memid.create_dm()
+                    await memid.dm_channel.send("Chat closed with " + str(meid))          
         me = message.author.id
         meid = client.get_user(me)
         memid = client.get_user(ids)
@@ -117,6 +129,8 @@ async def chatt(message, *args):
             await meid.dm_channel.send("Chat closed with " + str(memid))
             await memid.create_dm()
             await memid.dm_channel.send("Chat closed with " + str(meid))
+            await message.add_reaction("👌")
+            return
         print("I had a invalid id can't process to chat")
         await message.add_reaction("❔")
         return
@@ -130,6 +144,11 @@ async def chatt(message, *args):
         await message.author.create_dm()
         await message.author.send("**__Syntax Error__** \n\n If you want to talk to someone use : `&chat <id>` \n If you want to stop the chat use `&chat stop`", delete_after = 100)
 
+async def bann(message, *args):
+    idcs = int(args[0])
+    clid = client.get_user(idcs)
+    await ban(clid, reason=None, delete_message_days=0)
+
 async def sayy(message, *args):
     ch = int(args[0])
     mss = " ".join(args[1:])
@@ -140,19 +159,22 @@ async def sayy(message, *args):
 
     
 async def helpp(message, *args):
-    mem = message.author
-    await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
-    await mem.create_dm()
-    await mem.dm_channel.send("__**command list:**__ \n\n**option alone_time :** temps (en sec) qu'un utilisateur peut rester seul dans un vocal (par défaut 5min)\n\n**option raison :** le message qui sera envoyé aux utilisateur kickés (le message se supprime au bout de <deltime>)\n\n**stop :** permet d'arrêter le bot temporairement en cas de problèmes (pour relancer le bot il suffit de refaire la commande)\n\n**option prefix :** permet de changer le préfix du bot (& par défaut)\n\n**help :** envoie ce message à l'utilisateur qui effectue la commande\n\n**option emoji :** l'emoji avec le quel le bot réagit quand une personne fait <préfix>help (par défaut : :ok_hand:)\n\n**option frst_time :** temps (en sec) avant que le bot ne kick une personne qui est seul dans un vocal et qui n'a jamais été en conversation avec un autre utilisateur (30min par défaut )\n\n**option deltime :** temps (en sec) avant que le bot supprime le message d'avertissement envoyé en dm (par défaut : 24h)\n\n**option role :** nom du role qu'un membre doit posséder pour modifier les differents parametres (`modifier` par défaut)\n\n*note : il vous faut la permission `déplacer les membres` ou le role defini par <role> pour parametrer le bot*\n\n`Une question/sugestion? contactez mon devloppeur : `<@259676097652719616>` :)`")
-    print("help succsesfully send")
-actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help": helpp, "mute": mutee, "chat": chatt, "say": sayy, "unmute": unmutee}
-perm_actions = ["option", "stop", "mute"]
+	mem = message.author
+	await mem.create_dm()
+	await mem.dm_channel.send("__**command list:**__ \n\n**option alone_time :** temps (en sec) qu'un utilisateur peut rester seul dans un vocal (par défaut 5min)\n\n**option raison :** le message qui sera envoyé aux utilisateur kickés (le message se supprime au bout de <deltime>)\n\n**stop :** permet d'arrêter le bot temporairement en cas de problèmes (pour relancer le bot il suffit de refaire la commande)\n\n**option prefix :** permet de changer le préfix du bot (& par défaut)\n\n**help :** envoie ce message à l'utilisateur qui effectue la commande\n\n**option emoji :** l'emoji avec le quel le bot réagit quand une personne fait <préfix>help (par défaut : :ok_hand:)\n\n**option frst_time :** temps (en sec) avant que le bot ne kick une personne qui est seul dans un vocal et qui n'a jamais été en conversation avec un autre utilisateur (30min par défaut )\n\n**option deltime :** temps (en sec) avant que le bot supprime le message d'avertissement envoyé en dm (par défaut : 24h)\n\n**option role :** nom du role qu'un membre doit posséder pour modifier les differents parametres (`modifier` par défaut)\n\n**mute :** pour muter une personne sur tout les serveurs ou est installé le bot s'utilise de la facon &mute <id>\n\n**unmute :** pour unmute les gens mutés s'utilise de la facon &unmute <id> (pour unmuter tout le monde vous pouvez utiliser &unmute all)\n\n**say :** pour que le bot envoi un message a votre place dans un salon choisi s'utillise de la facon &say <id du channel> <message>\n\n**chat :** fonctionalitée experimentale pour parler a traver le bot avec d'autres personnes s'utilise de la facon &chat <id> (pour fermer le chat utilisez &chat stop)")
+	await mem.dm_channel.send("\n\n ```note : il vous faut la permission `déplacer les membres` ou le role defini par <role> pour parametrer le bot```\n\n__**En devloppement**__\n\n**ban :** pour bannir une personne d'un serveur ou de tous les serveurs ou le bot est connecté s'utilise de la facon &ban <id> (all) (pour pouvoir ban cette personne sur tout les serveurs vous devez avoir la permission de bannir des membres sur tout ces serveurs)\n\n**kick :** pour kicker une personne d'un serveur ou de tous les serveurs ou le bot est connecté s'utilise de la facon &kick <id> (all) (pour pouvoir kick cette personne sur tout les serveurs vous devez avoir la permission d'expulser des membres sur tout ces serveurs) \n\n`Une question/sugestion? contactez mon devloppeur : `<@259676097652719616>` :)`")
+	await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
+	print("help succsesfully send")
+actions = {"option": option, "desc": change_presence, "stop": toogle_stop, "help": helpp, "mute": mutee, "chat": chatt, "say": sayy, "unmute": unmutee, "ban": bann}
+perm_actions = ["option", "stop", "mute", "say", "unmute"]
 admin_actions = ["desc"]
 
 badwords = ["tg","TG","Tg","NTM","ntm","PD","pd","fdp","FDP","suce","Suce","SUCE","ftg","FTG","Ntm"]
 tg = ["fortnite", "Fortnite", "fortnayte", "fornite", "Fornite", "fortnayte", "Nite", "NITE", "FORTNITE"]
+ppl = ["paperluigi", "Paperluigi", "PAPERLUIGI"]
 pastg = ["unite", "tendinite"]
 censure = [532351456955727874, 651542073278988288]
+slp = [521030786334588958]
 muted = []
 
 @client.event
@@ -204,6 +226,24 @@ async def on_message(message):
                     if e.code == 50007:
                         print("can't send dm to", message.author, "the user must have bocked me ce big fdp")
                 return
+            
+    if message.guild.id in slp:
+        a = message.content
+        for mot in ppl:
+            if mot in a:                
+                if message.author.id == 259676097652719616:
+                    print("EYES INTENSIFIES")
+                    await message.add_reaction("👀")
+                    return
+                print("ppl detect in :",message.content) 
+                await message.delete()
+                await message.author.create_dm()
+                try:
+                    await message.author.dm_channel.send(message.content + " \n\n**NO**")
+                except Exception as e:
+                    if e.code == 50007:
+                        print("can't send dm to", message.author, "the user must have bocked me ce big fdp")
+                return
         
         
     if len(message.content) and message.content[0] == OPTIONS[message.guild.id]["prefix"]:
@@ -228,9 +268,9 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    print('{} is online and ready to kick'.format(client.user))
+    print('{} is online and ready to kick some ass'.format(client.user))
     mute = False
-    await change_presence(None, 'online and ready &help') 
+    await change_presence(None, '&help | online and ready') 
     for server in client.guilds:
         OPTIONS[server.id] = dict(DEFAULT)
         
