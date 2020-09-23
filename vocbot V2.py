@@ -91,19 +91,19 @@ async def veriff(message, *args):
             groupe = classe[nom]
             await message.author.add_roles(get(message.guild.roles, name=groupe))
             await message.author.add_roles(get(message.guild.roles, name="Elève"))
-            if groupe == "A1" or "A2":
+            if "A" in groupe:
                 print("groupe A")
                 await message.author.add_roles(get(message.guild.roles, name="A"))
                 return
-            elif groupe == "B1" or "B2":
+            elif "B" in groupe:
                 print("groupe B")
                 await message.author.add_roles(get(message.guild.roles, name="B"))
                 return
-            elif groupe == "C1" or "C2":
+            elif "C" in groupe:
                 print("groupe C")
                 await message.author.add_roles(get(message.guild.roles, name="C"))
                 return
-            elif groupe == "D1" or "D2":
+            elif "D" in groupe:
                 print("groupe D")
                 await message.author.add_roles(get(message.guild.roles, name="D"))
                 return
