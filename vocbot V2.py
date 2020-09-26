@@ -83,30 +83,40 @@ async def veriff(message, *args):
         
         if nom in classe:
             print("validé")
-            await message.add_reaction("👌")
-            print("renaming...")
-            rename = args[-1][0].upper() + args[-1][1:].lower() + " " + args[0][0].upper() + "."
-            await message.author.edit(nick=rename)
-            print("recherche du groupe...")
-            groupe = classe[nom]
-            await message.author.add_roles(get(message.guild.roles, name=groupe))
-            await message.author.add_roles(get(message.guild.roles, name="Elève"))
-            if "A" in groupe:
-                print("groupe A")
-                await message.author.add_roles(get(message.guild.roles, name="A"))
-                return
-            elif "B" in groupe:
-                print("groupe B")
-                await message.author.add_roles(get(message.guild.roles, name="B"))
-                return
-            elif "C" in groupe:
-                print("groupe C")
-                await message.author.add_roles(get(message.guild.roles, name="C"))
-                return
-            elif "D" in groupe:
-                print("groupe D")
-                await message.author.add_roles(get(message.guild.roles, name="D"))
-                return
+            if nom not in here:
+                await message.add_reaction("👌")
+                print("renaming...")
+                rename = args[-1][0].upper() + args[-1][1:].lower() + " " + args[0][0].upper() + "."
+                await message.author.edit(nick=rename)
+                here.append(nom)
+                print("recherche du groupe...")
+                groupe = classe[nom]
+                await message.author.add_roles(get(message.guild.roles, name=groupe))
+                await message.author.add_roles(get(message.guild.roles, name="Elève"))
+                if "A" in groupe:
+                    print("groupe A")
+                    await message.author.add_roles(get(message.guild.roles, name="A"))
+                    print("task sucsess")
+                    return
+                elif "B" in groupe:
+                    print("groupe B")
+                    await message.author.add_roles(get(message.guild.roles, name="B"))
+                    print("task sucsess")
+                    return
+                elif "C" in groupe:
+                    print("groupe C")
+                    await message.author.add_roles(get(message.guild.roles, name="C"))
+                    print("task sucsess")
+                    return
+                elif "D" in groupe:
+                    print("groupe D")
+                    await message.author.add_roles(get(message.guild.roles, name="D"))
+                    print("task sucsess")
+                    return
+            else:
+                await message.add_reaction("❌")
+                print(here)
+                print("deja dans le serv")
         else:
             await message.add_reaction("❌")
             print("inconnu")
@@ -209,8 +219,8 @@ async def helpp(message, *args):
 actions = {"option": option,"verif": veriff,"desc": change_presence, "stop": toogle_stop, "help": helpp, "mute": mutee, "chat": chatt, "say": sayy, "unmute": unmutee, "ban": bann}
 perm_actions = ["option", "stop", "mute", "say", "unmute"]
 admin_actions = ["desc"]
-classe = {'bastienne-banco théo': 'A-1', 'besnier clément': 'A-1', 'boisson leeloo': 'A-1', 'brunet quentin': 'A-1', 'dalleau alex': 'A-1', 'dhoury emma': 'A-1', 'fanget matthieu': 'A-1', 'godin luc': 'A-1', 'gonin flavien': 'A-1', 'guillemin matthieu': 'A-1', 'jay thomas': 'A-1', 'mathian thibault': 'A-1', 'mecheloukh sélim': 'A-1', 'mecheloukh soheïl': 'A-1', 'pognante jules': 'A-1', 'barth pierre': 'A-2', 'beaufils tao': 'A-2', 'consuegra yanis': 'A-2', 'derancourt rémi': 'A-2', 'doucet raphael': 'A-2', 'el assi nolan': 'A-2', 'gueguen axel': 'A-2', 'gundogan emin': 'A-2', 'hoarau océane': 'A-2', 'josserand jordan': 'A-2', 'mahri yassine': 'A-2', 'marizon flavien': 'A-2', 'steimer lilian': 'A-2', 'surre aymeric': 'A-2', 'vassal marco': 'A-2', 'barraud matthieu': 'B-1', 'blanco sacha': 'B-1', 'cros célian': 'B-1', 'de almeida goncalves syméon': 'B-1', 'gastaldo quentin': 'B-1', 'germani nicolas': 'B-1', 'gillot romain': 'B-1', 'guerin bastien': 'B-1', 'joyeux-bouillon estelle': 'B-1', 'lawriw elian': 'B-1', 'loiodice lukas': 'B-1', 'lucas maxence': 'B-1', 'mousques roméo': 'B-1', 'reynaud mathis': 'B-1', 'wibaillie valentin': 'B-1', 'albrand alexis': 'B-2', 'argoud thibaud': 'B-2', 'bonnefoy gael': 'B-2', 'bouchet adrien': 'B-2', 'choc noé': 'B-2', 'correnoz clement': 'B-2', 'delon loïc': 'B-2', 'doussot thibault': 'B-2', 'enrici mathis': 'B-2', 'mora hugo': 'B-2', 'morelle julien': 'B-2', 'pernier alexandre': 'B-2', 'salehddine othmane': 'B-2', 'thauvin- -tosetto lola': 'B-2', 'zahaf-kradra ilyas': 'B-2', 'adomo bitea adil massa': 'C-1', 'bel hadj asmaa': 'C-1', 'chalekh zineddine': 'C-1', 'cuerq florian': 'C-1', 'etievent lucas': 'C-1', 'lecornu raphael': 'C-1', 'lou lori': 'C-1', 'makri lina': 'C-1', 'mechehoud abdennour': 'C-1', 'pacotte gabriel': 'C-1', 'paillot jefferson': 'C-1', 'renard nathan': 'C-1', 'reynaud loris': 'C-1', 'robert marius': 'C-1', 'veillas matys': 'C-1', 'ben aïcha mohammed': 'C-2', 'chebout rayen': 'C-2', 'cole axel': 'C-2', 'da cruz benjamin': 'C-2', 'defleur thomas': 'C-2', 'dieudonne marc': 'C-2', 'gely ethan': 'C-2', 'gueripel paul': 'C-2', 'guichard lucas': 'C-2', 'hello adam': 'C-2', 'kilic mikâil': 'C-2', 'labatte elie': 'C-2', 'le menn lucas': 'C-2', 'lkima houda': 'C-2', 'rivière alexis': 'C-2', 'arnoux-bonkowski emmanuel': 'D-1', 'battesti loup': 'D-1', 'bernet elsa': 'D-1', 'carrel quentin': 'D-1', 'carta roni': 'D-1', 'dieu--guillot romain': 'D-1', 'duchet raphaël': 'D-1', 'elati adam': 'D-1', 'galleron evan': 'D-1', 'guillemin vincent': 'D-1', 'nascimento ardiles renato': 'D-1', 'piernas loïc': 'D-1', 'prochasson capucine': 'D-1', 'rognon nathan': 'D-1', 'sallé maxime': 'D-1', 'urru théo': 'D-1', 'amiot françois': 'D-2', 'arlè alexandre': 'D-2', 'belguendouz mehdi': 'D-2', 'ben youssef iheb': 'D-2', 'beyler wilson': 'D-2', 'del medico remi': 'D-2', 'dubonnet amandine': 'D-2', 'falcy marion': 'D-2', 'ferrouillet-reverdy laure': 'D-2', 'khababa abdel-rahim': 'D-2', 'lefranc nicolas': 'D-2', 'miras romain': 'D-2', 'ponal mathieu': 'D-2', 'roelandt zoé': 'D-2', 'rrahmani altin': 'D-2'}
-
+classe = {'bastienne-banco théo': 'A-1', 'besnier clément': 'A-1', 'boisson leeloo': 'A-1', 'brunet quentin': 'A-1', 'dalleau alex': 'A-1', 'dhoury emma': 'A-1', 'fanget matthieu': 'A-1', 'godin luc': 'A-1', 'gonin flavien': 'A-1', 'guillemin matthieu': 'A-1', 'jay thomas': 'A-1', 'mathian thibault': 'A-1', 'mecheloukh sélim': 'A-1', 'mecheloukh soheïl': 'A-1', 'pognante jules': 'A-1', 'barth pierre': 'A-2', 'beaufils tao': 'A-2', 'consuegra yanis': 'A-2', 'derancourt rémi': 'A-2', 'doucet raphael': 'A-2', 'el assi nolan': 'A-2', 'gueguen axel': 'A-2', 'gundogan emin': 'A-2', 'hoarau océane': 'A-2', 'josserand jordan': 'A-2', 'mahri yassine': 'A-2', 'marizon flavien': 'A-2', 'steimer lilian': 'A-2', 'surre aymeric': 'A-2', 'vassal marco': 'A-2', 'barraud matthieu': 'B-1', 'blanco sacha': 'B-1', 'cros célian': 'B-1', 'de almeida goncalves syméon': 'B-1', 'gastaldo quentin': 'B-1', 'germani nicolas': 'B-1', 'gillot romain': 'B-1', 'guerin bastien': 'B-1', 'joyeux-bouillon estelle': 'B-1', 'lawriw elian': 'B-1', 'loiodice lukas': 'B-1', 'lucas maxence': 'B-1', 'mousques roméo': 'B-1', 'reynaud mathis': 'B-1', 'wibaillie valentin': 'B-1', 'albrand alexis': 'B-2', 'argoud thibaud': 'B-2', 'bonnefoy gael': 'B-2', 'bouchet adrien': 'B-2', 'choc noé': 'B-2', 'correnoz clement': 'B-2', 'delon loïc': 'B-2', 'doussot thibault': 'B-2', 'enrici mathis': 'B-2', 'mora hugo': 'B-2', 'morelle julien': 'B-2', 'pernier alexandre': 'B-2', 'salehddine othmane': 'B-2', 'thauvin- -tosetto lola': 'B-2', 'zahaf-kradra ilyas': 'B-2', 'adomo bitea adil massa': 'C-1', 'bel hadj asmaa': 'C-1', 'chalekh zineddine': 'C-1', 'cuerq florian': 'C-1', 'etievent lucas': 'C-1', 'lecornu raphael': 'C-1', 'lou lori': 'C-1', 'makri lina': 'C-1', 'mechehoud abdennour': 'C-1', 'pacotte gabriel': 'C-1', 'paillot jefferson': 'C-1', 'renard nathan': 'C-1', 'reynaud loris': 'C-1', 'robert marius': 'C-1', 'veillas matys': 'C-1', 'ben aïcha mohammed': 'C-2', 'chebout rayen': 'C-2', 'cole axel': 'C-2', 'da cruz benjamin': 'C-2', 'defleur thomas': 'C-2', 'dieudonne marc': 'C-2', 'gely ethan': 'C-2', 'gueripel paul': 'C-2', 'guichard lucas': 'C-2', 'hello adam': 'C-2', 'kilic mikâil': 'C-2', 'labatte elie': 'C-2', 'le menn lucas': 'C-2', 'lkima houda': 'C-2', 'rivière alexis': 'C-2', 'arnoux-bonkowski emmanuel': 'D-1', 'battesti loup': 'D-1', 'bernet elsa': 'D-1', 'carrel quentin': 'D-1', 'carta roni': 'D-1', 'dieu--guillot romain': 'D-1', 'duchet raphaël': 'D-1', 'elati adam': 'D-1', 'galleron evan': 'D-1', 'guillemin vincent': 'D-1', 'nascimento ardiles renato': 'D-1', 'piernas loïc': 'D-1', 'prochasson capucine': 'D-1', 'rognon nathan': 'D-1', 'sallé maxime': 'D-1', 'urru théo': 'D-1', 'amiot françois': 'D-2', 'arlè alexandre': 'D-2', 'belguendouz mehdi': 'D-2', 'ben youssef iheb': 'D-2', 'beyler wilson': 'D-2', 'del medico rémi': 'D-2', 'dubonnet amandine': 'D-2', 'falcy marion': 'D-2', 'ferrouillet-reverdy laure': 'D-2', 'khababa abdel-rahim': 'D-2', 'lefranc nicolas': 'D-2', 'miras romain': 'D-2', 'ponal mathieu': 'D-2', 'roelandt zoé': 'D-2', 'rrahmani altin': 'D-2'}
+here = ["vassal marco", "doucet raphael", ]
 badwords = ["tg","TG","Tg","NTM","ntm","PD","pd","fdp","FDP","suce","Suce","SUCE","ftg","FTG","Ntm"]
 tg = ["fortnite", "Fortnite", "fortnayte", "fornite", "Fornite", "fortnayte", "Nite", "NITE", "FORTNITE"]
 ppl = ["paperluigi", "Paperluigi", "PAPERLUIGI"]
