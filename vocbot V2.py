@@ -1,7 +1,6 @@
 import discord
 import asyncio
 from keep_live import keep_live
-from time import sleep, time
 from json import load as json_load
 from discord.utils import get
 print(discord.__version__)
@@ -38,9 +37,15 @@ CHANNELS = {}
 
 
 async def option(message, var, value, *args):
-    OPTIONS[message.guild.id][var] = type(
-        OPTIONS[message.guild.id][var])(value)
+    OPTIONS[message.guild.id][var] = type(OPTIONS[message.guild.id][var])(value)
     await message.add_reaction("👌")
+
+
+async def statt(message, *args):
+  await message.channel.send("voici mes page de statut \n *notez les bien si je suis offline je ne pourrais pas vous les redonner* \n\n page de staut de l'hebergeur : https://stats.uptimerobot.com/o8vVviXMNY \n mot de passe : vivelebot \n\n page de statut du bot : https://Vocalkick.txmat.repl.co \n *si la parge renvoie ;) c'est que tout va bien sinon il y a un soucis* ")
+  
+async def tt(message, *args):
+  await message.channel.send("~~")
 
 
 async def change_presence(message, *args):
@@ -49,6 +54,7 @@ async def change_presence(message, *args):
             name=" ".join(args), type=discord.ActivityType.playing))
     log = "desc change to :", " ".join(args)
     print(str(log))
+
 
 
 async def toogle_stop(message, *args):
@@ -66,6 +72,16 @@ async def toogle_stop(message, *args):
         await change_presence(message, '&help | paused by :',
                               str(message.author))
         await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
+
+
+async def testt(message, *args):
+  await message.author.create_dm()
+  await message.author.dm_channel.send("test")
+  if message != "":
+    await message.author.dm_channel.send(message.content)
+  await message.add_reaction("👌")
+  print("testing by : ", message.author)
+  await message.author.dm_channel.send("complete")
 
 
 async def mutee(message, *args):
@@ -92,6 +108,9 @@ async def mutee(message, *args):
         return
 
 
+async def bott(message, *args):
+    await message.channel.send(client.get_user(args[0]).created_at)
+
 async def addd(message, *args):
     await client.get_user(259676097652719616).create_dm()
     nom = " ".join(args).lower()
@@ -112,7 +131,7 @@ async def addd(message, *args):
 
 async def veriff(message, *args):
     await client.get_user(259676097652719616).create_dm()
-    if message.guild.id != 757272034157002772:
+    if message.guild.id != 781651173572345896:
         await client.get_user(259676097652719616).dm_channel.send(
             "invalid server for verif")
         await message.add_reaction("❔")
@@ -208,8 +227,32 @@ async def unmutee(message, *args):
             return
 
 
+async def remindd(message, *args):
+  slep = int(args[0])
+  await asyncio.sleep(slep)
+  await message.author.create_dm()
+  txt = ""
+  for x in args:
+    txt += x + " "
+  txt = txt.split(' ', 1)[1]
+  msg = "n'oublie pas de " + txt + "aujourd'hui :3"
+  await message.author.dm_channel.send(msg)
+
+
+async def remindusrr(message, *args):
+  id = int(args[0])
+  slep = int(args[1])
+  await asyncio.sleep(slep)
+  await client.get_user(id).create_dm()  
+  txt = ""
+  for x in args:
+    txt += x + " "
+  txt = txt.split(' ', 2)[2]
+  msg = "n'oublie pas de " + txt + "aujourd'hui :3"
+  await client.get_user(id).dm_channel.send(msg)
+
+
 async def chatt(message, *args):
-    await client.get_user(259676097652719616).create_dm()
     global chat
     global ids
     global me
@@ -221,6 +264,8 @@ async def chatt(message, *args):
         if ids != idbck:
             if meid or memid != 0:
                 if meid or memid != None:
+                    print(memid)
+                    print(meid)
                     await meid.create_dm()
                     await meid.dm_channel.send("Chat closed with " +
                                                str(memid))
@@ -228,8 +273,12 @@ async def chatt(message, *args):
                     await memid.dm_channel.send("Chat closed with " +
                                                 str(meid))
         me = message.author.id
+        print(me)
         meid = client.get_user(me)
+        print(meid)
+        print(ids)
         memid = client.get_user(ids)
+        print(memid)
         await memid.create_dm()
         await memid.dm_channel.send("Connexion etablihed with " + str(meid))
         await meid.create_dm()
@@ -247,16 +296,13 @@ async def chatt(message, *args):
             await memid.dm_channel.send("Chat closed with " + str(meid))
             await message.add_reaction("👌")
             return
+        await client.get_user(259676097652719616).create_dm()
         await client.get_user(259676097652719616).dm_channel.send(
             "I had a invalid id can't process to chat")
         await message.add_reaction("❔")
         return
-    except AttributeError:
-        log = "can't open a chat with", ids, "i don't know this id"
-        await client.get_user(259676097652719616).dm_channel.send(log)
-        await message.add_reaction("❌")
-        return
     except IndexError:
+        await client.get_user(259676097652719616).create_dm()
         await client.get_user(259676097652719616).dm_channel.send(
             "I don't recive any id I don't know what to do")
         await message.add_reaction("❔")
@@ -264,14 +310,26 @@ async def chatt(message, *args):
         await message.author.send(
             "**__Syntax Error__** \n\n If you want to talk to someone use : `&chat <id>` \n If you want to stop the chat use `&chat stop`",
             delete_after=100)
+"""    except AttributeError:
+        await client.get_user(259676097652719616).create_dm()
+        log = "can't open a chat with", ids, "i don't know this id"
+        await client.get_user(259676097652719616).dm_channel.send(log)
+        await message.add_reaction("❌")
+        return"""
 
 
 async def bann(message, *args):
     await client.get_user(259676097652719616).create_dm()
     idcs = int(args[0])
     clid = client.get_user(idcs)
-    await ban(clid, reason=None, delete_message_days=0)
+    await clid.ban(clid, reason=None, delete_message_days=0)
 
+
+async def rr(message, *args):
+  await message.delete()
+  await message.channel.send("https://www.renater.fr/sites/default/files/weathermap/weathermap_france_v2.png")
+  log = "get renated"
+  print(log)
 
 async def sayy(message, *args):
     await client.get_user(259676097652719616).create_dm()
@@ -282,12 +340,15 @@ async def sayy(message, *args):
     await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
     return
 
+async def noo(message, *args):
+  await message.delete()
+  await message.channel.send("https://cdn.discordapp.com/attachments/496012052406468639/798961383949074432/NO.mp4")
 
 async def helpp(message, *args):
     mem = message.author
     await mem.create_dm()
     await mem.dm_channel.send(
-        "__**command list:**__ \n\n**option alone_time :** temps (en sec) qu'un utilisateur peut rester seul dans un vocal (par défaut 5min)\n\n**option raison :** le message qui sera envoyé aux utilisateur kickés (le message se supprime au bout de <deltime>)\n\n**stop :** permet d'arrêter le bot temporairement en cas de problèmes (pour relancer le bot il suffit de refaire la commande)\n\n**option prefix :** permet de changer le préfix du bot (& par défaut)\n\n**help :** envoie ce message à l'utilisateur qui effectue la commande\n\n**option emoji :** l'emoji avec le quel le bot réagit quand une personne fait <préfix>help (par défaut : :ok_hand:)\n\n**option frst_time :** temps (en sec) avant que le bot ne kick une personne qui est seul dans un vocal et qui n'a jamais été en conversation avec un autre utilisateur (30min par défaut )\n\n**option deltime :** temps (en sec) avant que le bot supprime le message d'avertissement envoyé en dm (par défaut : 24h)\n\n**option role :** nom du role qu'un membre doit posséder pour modifier les differents parametres (`modifier` par défaut)\n\n**mute :** pour muter une personne sur tout les serveurs ou est installé le bot s'utilise de la facon &mute <id>\n\n**unmute :** pour unmute les gens mutés s'utilise de la facon &unmute <id> (pour unmuter tout le monde vous pouvez utiliser &unmute all)\n\n**say :** pour que le bot envoi un message a votre place dans un salon choisi s'utillise de la facon &say <id du channel> <message>\n\n**chat :** fonctionalitée experimentale pour parler a traver le bot avec d'autres personnes s'utilise de la facon &chat <id> (pour fermer le chat utilisez &chat stop)"
+        "__**command list:**__ \n\n**option alone_time :** temps (en sec) qu'un utilisateur peut rester seul dans un vocal (par défaut 5min)\n\n**option raison :** le message qui sera envoyé aux utilisateur kickés (le message se supprime au bout de <deltime>)\n\n**stop :** permet d'arrêter le bot temporairement en cas de problèmes (pour relancer le bot il suffit de refaire la commande)\n\n**option prefix :** permet de changer le préfix du bot (& par défaut)\n\n**help :** envoie ce message à l'utilisateur qui effectue la commande\n\n**option emoji :** l'emoji avec le quel le bot réagit quand une personne fait <préfix>help (par défaut : :ok_hand:)\n\n**option frst_time :** temps (en sec) avant que le bot ne kick une personne qui est seul dans un vocal et qui n'a jamais été en conversation avec un autre utilisateur (30min par défaut )\n\n**option deltime :** temps (en sec) avant que le bot supprime le message d'avertissement envoyé en dm (par défaut : 24h)\n\n**option role :** nom du role qu'un membre doit posséder pour modifier les differents parametres (`modifier` par défaut)\n\n**mute :** pour muter une personne sur tout les serveurs ou est installé le bot s'utilise de la facon &mute <id>\n\n**unmute :** pour unmute les gens mutés s'utilise de la facon &unmute <id> (pour unmuter tout le monde vous pouvez utiliser &unmute all)\n\n**up :** pour voir le statut du bot et ses downtime les plus recents\n\n**chat :** fonctionalitée experimentale pour parler a traver le bot avec d'autres personnes s'utilise de la facon &chat <id> (pour fermer le chat utilisez &chat stop)\n\n**no** : no\n\n**t** : pour avoir deux ~ (oui les gens utilisent cette commande)"
     )
     await mem.dm_channel.send(
         "\n\n ```note : il vous faut la permission `déplacer les membres` ou le role defini par <role> pour parametrer le bot```\n\n__**En devloppement**__\n\n**ban :** pour bannir une personne d'un serveur ou de tous les serveurs ou le bot est connecté s'utilise de la facon &ban <id> (all) (pour pouvoir ban cette personne sur tout les serveurs vous devez avoir la permission de bannir des membres sur tout ces serveurs)\n\n**kick :** pour kicker une personne d'un serveur ou de tous les serveurs ou le bot est connecté s'utilise de la facon &kick <id> (all) (pour pouvoir kick cette personne sur tout les serveurs vous devez avoir la permission d'expulser des membres sur tout ces serveurs) \n\n`Une question/sugestion? contactez mon devloppeur : `<@259676097652719616>` :)`"
@@ -306,7 +367,15 @@ actions = {
     "chat": chatt,
     "say": sayy,
     "unmute": unmutee,
-    "ban": bann
+    "ban": bann,
+    "test" : testt,
+    "up" : statt,
+    "no" : noo,
+    "age" : bott,
+    "t" : tt,
+    "r" : rr,
+    "remind" : remindd,
+    "remindusr" : remindusrr
 }
 perm_actions = ["option", "stop", "mute", "say", "unmute"]
 admin_actions = ["desc"]
@@ -438,8 +507,7 @@ here = [
     "doucet raphael",
 ]
 badwords = [
-    "tg", "TG", "Tg", "NTM", "ntm", "PD", "pd", "fdp", "FDP", "suce", "Suce",
-    "SUCE", "ftg", "FTG", "Ntm"
+    "tg", "ntm", "pd", "fdp", "suce", "ftg", "ntm"
 ]
 tg = [
     "fortnite", "Fortnite", "fortnayte", "fornite", "Fornite", "fortnayte",
@@ -459,6 +527,10 @@ async def on_message(message):
         if message.author.id == 697343120433741947:
             return
         if chat == True:
+            global ids
+            global me
+            global meid
+            global memid
             if message.author.id == ids:
                 meid = client.get_user(me)
                 await meid.create_dm()
@@ -469,7 +541,8 @@ async def on_message(message):
                 await memid.create_dm()
                 await memid.dm_channel.send(message.content)
                 return
-        if message.content in badwords:
+        if message.content.lower() in badwords:
+            await client.get_user(259676097652719616).create_dm()
             if message.author.id == 328521363180748801:
                 log = "insult in dm :", message.content
                 await client.get_user(259676097652719616).dm_channel.send(log)
@@ -490,7 +563,19 @@ async def on_message(message):
     if message.author.id in muted:
         await message.delete()
         return
-
+    if message.channel.id == 703113538360705045:
+      print("new message in maps on sailors \n Begin react procdure")
+      await message.add_reaction("1️⃣")
+      await message.add_reaction("2️⃣")
+      await message.add_reaction("3️⃣")
+      await message.add_reaction("4️⃣")
+      await message.add_reaction("5️⃣")
+      await message.add_reaction("6️⃣")
+      await message.add_reaction("7️⃣")
+      if message.author.id == 259676097652719616 or message.author.id == 315182690292727810:
+        await message.add_reaction("8️⃣")
+        await message.add_reaction("9️⃣")
+      print("Reacting ended")
     if message.guild.id in censure:
         a = message.content
         for mot in tg:
@@ -500,6 +585,7 @@ async def on_message(message):
                         "EYES INTENSIFIES")
                     await message.add_reaction("👀")
                     return
+                await client.get_user(259676097652719616).create_dm()
                 log = "bad msg in yoro :", message.content
                 await client.get_user(259676097652719616).dm_channel.send(log)
                 await message.add_reaction("🖕")
@@ -523,6 +609,7 @@ async def on_message(message):
                         "EYES INTENSIFIES")
                     await message.add_reaction("👀")
                     return
+                await client.get_user(259676097652719616).create_dm()
                 log = "ppl detect in :", message.content
                 await client.get_user(259676097652719616).dm_channel.send(log)
                 await message.delete()
@@ -541,6 +628,7 @@ async def on_message(message):
                                                               id]["prefix"]:
 
         a = message.content[1:].split(" ")
+        await client.get_user(259676097652719616).create_dm()
         if a[0] not in actions:
             log = "wrong command:", message.content, "by :", message.author
             await client.get_user(259676097652719616).dm_channel.send(log)
@@ -561,6 +649,7 @@ async def on_message(message):
             await client.get_user(259676097652719616).dm_channel.send(
                 message.author.roles)
             return
+        await client.get_user(259676097652719616).create_dm()
         log = "executing command:", message.content, "by :", message.author
         await client.get_user(259676097652719616).dm_channel.send(log)
         await actions[a[0]](message, *a[1:])
