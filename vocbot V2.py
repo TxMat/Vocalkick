@@ -1,6 +1,5 @@
 import discord
 import asyncio
-from keep_live import keep_live
 from json import load as json_load
 from discord.utils import get
 print(discord.__version__)
@@ -767,5 +766,5 @@ async def on_voice_state_update(member, before, after):
             if before.channel in CHANNELS:
                 del CHANNELS[before.channel]
 
-keep_live()
+
 client.run(CONFIG["token"])
