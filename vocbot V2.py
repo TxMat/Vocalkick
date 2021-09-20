@@ -322,6 +322,13 @@ async def bann(message, *args):
     idcs = int(args[0])
     clid = client.get_user(idcs)
     await clid.ban(clid, reason=None, delete_message_days=0)
+    
+async def compoo(message, *args):
+	await msg = fetch_message(args[0])
+	react = msg.reactions
+	print(react)
+	
+	
 
 
 async def rr(message, *args):
@@ -374,7 +381,8 @@ actions = {
     "t" : tt,
     "r" : rr,
     "remind" : remindd,
-    "remindusr" : remindusrr
+    "remindusr" : remindusrr,
+    "compo" : compoo
 }
 perm_actions = ["option", "stop", "mute", "say", "unmute"]
 admin_actions = ["desc"]
