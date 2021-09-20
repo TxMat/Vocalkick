@@ -317,7 +317,7 @@ async def bann(message, *args):
 async def compoo(message, *args):
 	ch = int(args[0])
 	channel = client.get_channel(ch)
-	msg = channel.fetch_message(args[1])
+	msg = await channel.fetch_message(args[1])
 	react = msg.reactions
 	print(react)
 	
