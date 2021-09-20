@@ -314,7 +314,7 @@ async def bann(message, *args):
     await clid.ban(clid, reason=None, delete_message_days=0)
     
 async def compoo(message, *args):
-	await msg = fetch_message(args[0])
+	msg = fetch_message(args[0])
 	react = msg.reactions
 	print(react)
 	
