@@ -51,23 +51,21 @@ async def change_presence(message, *args):
     await client.change_presence(
         activity=discord.Activity(
             name=" ".join(args), type=discord.ActivityType.playing))
-    log = "desc change to :", " ".join(args)
-    print(str(log))
+    print("desc change to :", " ".join(args))
 
 
 
 async def toogle_stop(message, *args):
-    await client.get_user(259676097652719616).create_dm()
     OPTIONS[message.guild.
             id]["running"] = not OPTIONS[message.guild.id]["running"]
     if OPTIONS[message.guild.id]["running"] == True:
         await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
         await change_presence(message, '&help | online and ready')
         log = "resuming by :", message.author
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
     else:
         log = "stopped by :", message.author
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         await change_presence(message, '&help | paused by :',
                               str(message.author))
         await message.add_reaction(OPTIONS[message.channel.guild.id]["emoji"])
@@ -83,8 +81,7 @@ async def testt(message, *args):
   await message.author.dm_channel.send("complete")
 
 
-async def mutee(message, *args):
-    await client.get_user(259676097652719616).create_dm()
+async def mutee(message, *args):    
     global idmute
     idmute = int(args[0])
     if idmute == 259676097652719616:
@@ -98,58 +95,55 @@ async def mutee(message, *args):
         await message.author.dm_channel.send(
             str(idmute) + "is already muted", delete_after=100)
         log = idmute, "already muted"
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
     if idmute not in muted:
         muted.append(idmute)
         await message.add_reaction("🟢")
         log = idmute, "is now muted"
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         return
 
 
 async def bott(message, *args):
     await message.channel.send(client.get_user(args[0]).created_at)
 
-async def addd(message, *args):
-    await client.get_user(259676097652719616).create_dm()
+async def addd(message, *args):    
     nom = " ".join(args).lower()
-    await client.get_user(259676097652719616).dm_channel.send(args)
+    print(args)
     if nom in classe:
-        await client.get_user(259676097652719616).dm_channel.send("validé")
+        print("validé")
         if nom not in here:
             await message.add_reaction("👌")
             here.append(nom)
-            await client.get_user(259676097652719616).dm_channel.send("okay")
-            await client.get_user(259676097652719616).dm_channel.send(here)
+            print("okay")
+            print(here)
         else:
             await message.add_reaction("❌")
-            await client.get_user(259676097652719616).dm_channel.send(here)
-            await client.get_user(259676097652719616).dm_channel.send(
+            print(here)
+            print(
                 "deja dans le serv")
 
 
-async def veriff(message, *args):
-    await client.get_user(259676097652719616).create_dm()
+async def veriff(message, *args):    
     if message.guild.id != 781651173572345896:
-        await client.get_user(259676097652719616).dm_channel.send(
+        print(
             "invalid server for verif")
         await message.add_reaction("❔")
         return
     nom = " ".join(args).lower()
-    await client.get_user(259676097652719616).dm_channel.send(args)
+    print(args)
     try:
-
         if nom in classe:
-            await client.get_user(259676097652719616).dm_channel.send("validé")
+            print("validé")
             if nom not in here:
                 await message.add_reaction("👌")
-                await client.get_user(259676097652719616).dm_channel.send(
+                print(
                     "renaming...")
                 rename = args[-1][0].upper() + args[-1][1:].lower(
                 ) + " " + args[0][0].upper() + "."
                 await message.author.edit(nick=rename)
                 here.append(nom)
-                await client.get_user(259676097652719616).dm_channel.send(
+                print(
                     "recherche du groupe...")
                 groupe = classe[nom]
                 await message.author.add_roles(
@@ -157,57 +151,54 @@ async def veriff(message, *args):
                 await message.author.add_roles(
                     get(message.guild.roles, name="Elève"))
                 if "A" in groupe:
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "groupe A")
                     await message.author.add_roles(
                         get(message.guild.roles, name="A"))
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "task sucsess")
                     return
                 elif "B" in groupe:
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "groupe B")
                     await message.author.add_roles(
                         get(message.guild.roles, name="B"))
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "task sucsess")
                     return
                 elif "C" in groupe:
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "groupe C")
                     await message.author.add_roles(
                         get(message.guild.roles, name="C"))
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "task sucsess")
                     return
                 elif "D" in groupe:
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "groupe D")
                     await message.author.add_roles(
                         get(message.guild.roles, name="D"))
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "task sucsess")
                     return
             else:
                 await message.add_reaction("❌")
-                await client.get_user(259676097652719616).dm_channel.send(here)
-                await client.get_user(259676097652719616).dm_channel.send(
+                print(here)
+                print(
                     "deja dans le serv")
         else:
             await message.add_reaction("❌")
-            await client.get_user(259676097652719616).dm_channel.send("inconnu"
-                                                                      )
+            print("inconnu")
             return
     except:
         await message.add_reaction("❔")
-        await client.get_user(259676097652719616).dm_channel.send(
-            "critical error")
+        print("critical error")
 
 
 async def unmutee(message, *args):
-    await client.get_user(259676097652719616).create_dm()
     global muted
-    await client.get_user(259676097652719616).dm_channel.send(muted)
+    print(muted)
     idmute = args[0]
     try:
         idmute = int(args[0])
@@ -295,14 +286,14 @@ async def chatt(message, *args):
             await memid.dm_channel.send("Chat closed with " + str(meid))
             await message.add_reaction("👌")
             return
-        await client.get_user(259676097652719616).create_dm()
-        await client.get_user(259676097652719616).dm_channel.send(
+        
+        print(
             "I had a invalid id can't process to chat")
         await message.add_reaction("❔")
         return
     except IndexError:
-        await client.get_user(259676097652719616).create_dm()
-        await client.get_user(259676097652719616).dm_channel.send(
+        
+        print(
             "I don't recive any id I don't know what to do")
         await message.add_reaction("❔")
         await message.author.create_dm()
@@ -310,15 +301,14 @@ async def chatt(message, *args):
             "**__Syntax Error__** \n\n If you want to talk to someone use : `&chat <id>` \n If you want to stop the chat use `&chat stop`",
             delete_after=100)
 """    except AttributeError:
-        await client.get_user(259676097652719616).create_dm()
+        
         log = "can't open a chat with", ids, "i don't know this id"
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         await message.add_reaction("❌")
         return"""
 
 
 async def bann(message, *args):
-    await client.get_user(259676097652719616).create_dm()
     idcs = int(args[0])
     clid = client.get_user(idcs)
     await clid.ban(clid, reason=None, delete_message_days=0)
@@ -338,7 +328,7 @@ async def rr(message, *args):
   print(log)
 
 async def sayy(message, *args):
-    await client.get_user(259676097652719616).create_dm()
+    
     ch = int(args[0])
     mss = " ".join(args[1:])
     channel = client.get_channel(ch)
@@ -549,23 +539,23 @@ async def on_message(message):
                 await memid.dm_channel.send(message.content)
                 return
         if message.content.lower() in badwords:
-            await client.get_user(259676097652719616).create_dm()
+            
             if message.author.id == 328521363180748801:
                 log = "insult in dm :", message.content
-                await client.get_user(259676097652719616).dm_channel.send(log)
+                print(log)
                 log = "by :", message.author
-                await client.get_user(259676097652719616).dm_channel.send(log)
+                print(log)
                 return
             await message.author.dm_channel.send(">:(")
             log = "insult in dm :", message.content
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
             log = "get trolled :", message.author
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
             return
         log = "dm ressage recived :", message.content
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         log = "by :", message.author
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         return
     if message.author.id in muted:
         await message.delete()
@@ -588,13 +578,13 @@ async def on_message(message):
         for mot in tg:
             if mot in a:
                 if message.author.id == 259676097652719616:
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "EYES INTENSIFIES")
                     await message.add_reaction("👀")
                     return
-                await client.get_user(259676097652719616).create_dm()
+                
                 log = "bad msg in yoro :", message.content
-                await client.get_user(259676097652719616).dm_channel.send(log)
+                print(log)
                 await message.add_reaction("🖕")
                 await message.author.create_dm()
                 try:
@@ -612,13 +602,13 @@ async def on_message(message):
         for mot in ppl:
             if mot in a:
                 if message.author.id == 259676097652719616:
-                    await client.get_user(259676097652719616).dm_channel.send(
+                    print(
                         "EYES INTENSIFIES")
                     await message.add_reaction("👀")
                     return
-                await client.get_user(259676097652719616).create_dm()
+                
                 log = "ppl detect in :", message.content
-                await client.get_user(259676097652719616).dm_channel.send(log)
+                print(log)
                 await message.delete()
                 await message.author.create_dm()
                 try:
@@ -635,15 +625,15 @@ async def on_message(message):
                                                               id]["prefix"]:
 
         a = message.content[1:].split(" ")
-        await client.get_user(259676097652719616).create_dm()
+        
         if a[0] not in actions:
             log = "wrong command:", message.content, "by :", message.author
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
             await message.add_reaction("❔")
             return
         if a[0] in admin_actions and message.author.id not in CONFIG["admins"]:
             log = "wrong permission to use command:", message.content, "by :", message.author
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
             await message.add_reaction("❌")
             return
         if a[0] in perm_actions and (
@@ -651,14 +641,14 @@ async def on_message(message):
                 and OPTIONS[message.channel.guild.id]["role"] not in list(
                     map(lambda x: x.name, message.author.roles))):
             log = "no perms nice try ", message.author
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
             await message.add_reaction("❌")
-            await client.get_user(259676097652719616).dm_channel.send(
+            print(
                 message.author.roles)
             return
-        await client.get_user(259676097652719616).create_dm()
+        
         log = "executing command:", message.content, "by :", message.author
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         await actions[a[0]](message, *a[1:])
 
 
@@ -678,7 +668,7 @@ async def on_guild_join(guild):
 
 
 async def on_delay(channel, first=False):
-    await client.get_user(259676097652719616).create_dm()
+    
     if not OPTIONS[channel.guild.id]["running"]:
         if channel in CHANNELS:
             del CHANNELS[channel]
@@ -686,33 +676,33 @@ async def on_delay(channel, first=False):
     if first:
         log = channel.members[
             0].name, "is alone in", channel.name, "waiting for someone in the server :", channel.guild.name,
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         log = "starting the alone time countdown before kicking(", OPTIONS[
             channel.guild.id]["frst_time"], "sec )"
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         await asyncio.sleep(OPTIONS[channel.guild.id]["frst_time"])
         try:
             log = "Countdown ended for", channel.members[
                 0].name, "in", channel.name, "(", channel.guild.name, ")"
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
         except:
             log = "Countdown ended but the member has left the channel before"
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
     else:
         log = channel.members[
             0].name, "is now alone in the channel", channel.name, "in the server :", channel.guild.name
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         log = "starting the alone time countdown before kicking(", OPTIONS[
             channel.guild.id]["alone_time"], "sec )"
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         await asyncio.sleep(OPTIONS[channel.guild.id]["alone_time"])
         try:
             log = "Countdown ended for", channel.members[
                 0].name, "in", channel.name, "(", channel.guild.name, ")"
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
         except:
             log = "Countdown ended but the member has left the channel before"
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
 
     while not OPTIONS[channel.guild.id]["running"]:
         if first:
@@ -727,19 +717,19 @@ async def on_delay(channel, first=False):
             if nb > 1:
                 log = "there is now", nb, "person connected in", channel.name, "(", channel.guild.name, ") with", members[
                     0], "aborting kicking procedure..."
-                await client.get_user(259676097652719616).dm_channel.send(log)
+                print(log)
                 return
             if nb == 0:
                 log = "there is no one in the channel", channel.name, "can't process to kick..."
-                await client.get_user(259676097652719616).dm_channel.send(log)
+                print(log)
                 return
         log = members[
             0], "is still alone in", channel.name, "on", channel.guild, "starting kicking procedure..."
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         await members[0].edit(
             voice_channel=None, reason=OPTIONS[channel.guild.id]["reason"])
         log = members[0], "kicked!"
-        await client.get_user(259676097652719616).dm_channel.send(log)
+        print(log)
         await members[0].create_dm()
         try:
             await members[0].dm_channel.send(
@@ -749,26 +739,26 @@ async def on_delay(channel, first=False):
             if e.code == 50007:
                 log = "can't send dm to", members[
                     0], "the user must have bocked me"
-                await client.get_user(259676097652719616).dm_channel.send(log)
+                print(log)
 
 
 @client.event
 async def on_voice_state_update(member, before, after):
-    await client.get_user(259676097652719616).create_dm()
+    
     if after.channel and before.channel != after.channel:
         if after.channel in CHANNELS:
             del CHANNELS[after.channel]
         if len(after.channel.members) == 1:
             CHANNELS[after.channel] = True
             log = "channel changed for", member.name, "(", before.channel, "->", after.channel, ")"
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
             await on_delay(after.channel, first=True)
 
     if before.channel and before.channel != after.channel:
         if len(before.channel.members) == 1:
             CHANNELS[before.channel] = True
             log = member.name, "leave"
-            await client.get_user(259676097652719616).dm_channel.send(log)
+            print(log)
             await on_delay(before.channel)
         else:
             if before.channel in CHANNELS:
