@@ -233,6 +233,7 @@ async def remindusrr(message, *args):
   id = int(args[0])
   slep = int(args[1])
   await asyncio.sleep(slep)
+  await client.wait_until_ready()
   await client.get_user(id).create_dm()  
   txt = ""
   for x in args:
@@ -314,7 +315,9 @@ async def bann(message, *args):
     await clid.ban(clid, reason=None, delete_message_days=0)
     
 async def compoo(message, *args):
-	msg = fetch_message(args[0])
+	ch = int(args[0])
+	channel = client.get_channel(ch)
+	msg = channel.fetch_message(args[1])
 	react = msg.reactions
 	print(react)
 	
